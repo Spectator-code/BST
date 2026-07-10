@@ -13,11 +13,11 @@
   <!-- Navbar -->
   <nav class="chal-navbar">
     <a class="logo" href="dashboard.html">
-      <div class="logo-icon">🌳</div>
+      <div class="logo-icon">SN</div>
       Send <span>Node</span>
     </a>
     <span class="chal-prob-title" id="nav-prob-title">Challenge Mode</span>
-    <a class="btn btn-ghost" href="explorer.html" style="font-size:12px;padding:6px 14px;">← Explorer</a>
+    <a class="btn btn-ghost" href="explorer.html" style="font-size:12px;padding:6px 14px;">Explorer</a>
     <button class="btn btn-ghost" style="font-size:12px;padding:6px 14px;" onclick="handleLogout()">Sign Out</button>
   </nav>
 
@@ -40,10 +40,10 @@
         </div>
       </div>
       <div class="desc-body" id="desc-body">
-        <p style="color:var(--text-muted)">👈 Pick a problem from the sidebar to begin.</p>
+        <p style="color:var(--text-muted)">Select a problem from the sidebar to begin.</p>
       </div>
       <div class="hints-section" id="hints-section" style="display:none">
-        <button class="hints-toggle" onclick="toggleHints()">💡 Show Hints</button>
+        <button class="hints-toggle" onclick="toggleHints()">Show Hints</button>
         <div class="hints-list" id="hints-list"></div>
       </div>
     </div>
@@ -55,9 +55,9 @@
       <div class="ide-toolbar">
         <span class="ide-lang-badge">Java (pseudo)</span>
         <div class="ide-spacer"></div>
-        <button class="btn btn-ghost btn-icon" onclick="resetIde()" title="Reset code">↺ Reset</button>
-        <button class="btn btn-blue"    onclick="runCode(false)">▶ Run</button>
-        <button class="btn btn-success" onclick="runCode(true)">✔ Submit</button>
+        <button class="btn btn-ghost btn-icon" onclick="resetIde()">Reset</button>
+        <button class="btn btn-blue"    onclick="runCode(false)">Run</button>
+        <button class="btn btn-success" onclick="runCode(true)">Submit</button>
       </div>
 
       <!-- Split: editor + mini visualizer -->
@@ -65,7 +65,7 @@
 
         <!-- Editor -->
         <div class="ide-editor-wrap">
-          <textarea id="chal-code" spellcheck="false">// Select a problem from the sidebar to start!</textarea>
+          <textarea id="chal-code" spellcheck="false">// Select a problem from the sidebar to start.</textarea>
         </div>
 
         <!-- Mini BST Visualizer -->
@@ -103,12 +103,13 @@
     from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
   const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_AUTH_DOMAIN",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_STORAGE_BUCKET",
-    messagingSenderId: "YOUR_SENDER_ID",
-    appId: "YOUR_APP_ID"
+    apiKey: "AIzaSyBf4m6LnrR2XI6j6ex1D9nHkDSNT57ErG4",
+    authDomain: "send-node.firebaseapp.com",
+    projectId: "send-node",
+    storageBucket: "send-node.firebasestorage.app",
+    messagingSenderId: "239978336493",
+    appId: "1:239978336493:web:49580094311c7562d5fce4",
+    measurementId: "G-TS3CCSHWJT"
   };
 
   const app  = initializeApp(firebaseConfig);
@@ -127,7 +128,6 @@
     } catch(e) {}
     window.initChallengePage(solvedProblems);
 
-    // Check URL param for direct problem link
     const params = new URLSearchParams(window.location.search);
     const pid = parseInt(params.get('p'));
     if (pid && pid >= 1 && pid <= 14) window.loadProblem(pid);
@@ -135,18 +135,15 @@
 
   window.handleLogout = async () => { await signOut(auth); window.location.href = 'index.html'; };
 
-  // Called from challenge.js when user submits successfully
   window.markSolved = async function(problemId) {
-    if (!currentUser) return;
-    if (solvedProblems.includes(problemId)) return; // already solved
+    if (!currentUser || solvedProblems.includes(problemId)) return;
     solvedProblems.push(problemId);
     try {
       await updateDoc(doc(db, 'users', currentUser.uid), {
         solvedProblems: arrayUnion(problemId)
       });
-      // Update sidebar dot
       const el = document.getElementById(`prob-check-${problemId}`);
-      if (el) el.textContent = '✅';
+      if (el) el.textContent = 'Solved';
     } catch(e) {}
   };
 </script>

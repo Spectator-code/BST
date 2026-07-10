@@ -13,11 +13,11 @@
   <!-- Navbar -->
   <nav class="exp-navbar">
     <a class="logo" href="dashboard.html">
-      <div class="logo-icon">🌳</div>
+      <div class="logo-icon">SN</div>
       Send <span>Node</span>
     </a>
     <span class="exp-title">BST Explorer</span>
-    <a class="btn btn-ghost" href="challenge.html" style="font-size:12px;padding:6px 14px;">→ Challenge Mode</a>
+    <a class="btn btn-ghost" href="challenge.html" style="font-size:12px;padding:6px 14px;">Challenge Mode</a>
     <button class="btn btn-ghost" style="font-size:12px;padding:6px 14px;" onclick="handleLogout()">Sign Out</button>
   </nav>
 
@@ -25,24 +25,24 @@
   <div class="exp-toolbar">
     <input class="exp-input" id="value-input" type="number" placeholder="Value" />
 
-    <button class="btn btn-success btn-icon" id="btn-insert" onclick="handleInsert()">➕ Insert</button>
-    <button class="btn btn-primary btn-icon" style="background:#c0392b" onclick="handleDelete()">✖ Delete</button>
-    <button class="btn btn-blue btn-icon" onclick="handleSearch()">🔍 Search</button>
+    <button class="btn btn-success btn-icon" id="btn-insert" onclick="handleInsert()">Insert</button>
+    <button class="btn btn-icon" style="background:#c0392b;color:#fff;font-weight:600;border-radius:8px;padding:8px 18px;" onclick="handleDelete()">Delete</button>
+    <button class="btn btn-blue btn-icon" onclick="handleSearch()">Search</button>
 
     <div class="toolbar-sep"></div>
 
-    <button class="btn btn-ghost btn-icon" onclick="handleRandom()" title="Random tree">🎲 Random</button>
-    <button class="btn btn-ghost btn-icon" onclick="handleClear()" title="Clear tree">🗑 Clear</button>
+    <button class="btn btn-ghost btn-icon" onclick="handleRandom()">Random</button>
+    <button class="btn btn-ghost btn-icon" onclick="handleClear()">Clear</button>
 
     <div class="toolbar-sep"></div>
 
-    <button class="btn btn-ghost btn-icon" onclick="viz.zoomIn()"  title="Zoom in">🔍+</button>
-    <button class="btn btn-ghost btn-icon" onclick="viz.zoomOut()" title="Zoom out">🔍-</button>
-    <button class="btn btn-ghost btn-icon" onclick="viz.resetView()" title="Reset view">⌂</button>
+    <button class="btn btn-ghost btn-icon" onclick="viz.zoomIn()">Zoom In</button>
+    <button class="btn btn-ghost btn-icon" onclick="viz.zoomOut()">Zoom Out</button>
+    <button class="btn btn-ghost btn-icon" onclick="viz.resetView()">Reset View</button>
 
     <div class="toolbar-sep"></div>
 
-    <button class="btn btn-ghost btn-icon" id="toggle-code-btn" onclick="toggleCode()">◀ Code</button>
+    <button class="btn btn-ghost btn-icon" id="toggle-code-btn" onclick="toggleCode()">Code Panel</button>
   </div>
 
   <!-- Main -->
@@ -51,13 +51,13 @@
     <!-- Canvas -->
     <div class="exp-canvas-wrap">
       <canvas id="exp-canvas"></canvas>
-      <div class="canvas-hint">🖱 Drag to pan · Scroll to zoom · Use toolbar or Code panel</div>
+      <div class="canvas-hint">Drag to pan &nbsp;&middot;&nbsp; Scroll to zoom &nbsp;&middot;&nbsp; Use toolbar or code panel</div>
     </div>
 
     <!-- Code Panel -->
     <div class="exp-code-panel" id="code-panel">
       <div class="code-panel-header">
-        <div class="code-panel-title">📝 Java Code Editor</div>
+        <div class="code-panel-title">Java Code Editor</div>
         <div class="code-panel-hint">Write Java-style code to build and manipulate the BST</div>
       </div>
       <div class="code-editor-wrap">
@@ -77,12 +77,12 @@ tree.delete(30);
 System.out.println("Done!");</textarea>
       </div>
       <div class="code-btn-row">
-        <button class="btn btn-success" onclick="runCode()">▶ Run All</button>
-        <button class="btn btn-blue"    onclick="stepCode()">⏭ Step</button>
-        <button class="btn btn-ghost"   onclick="resetCode()">↺ Reset</button>
-        <button class="btn btn-ghost"   onclick="loadExample()">📋 Example</button>
+        <button class="btn btn-success" onclick="runCode()">Run All</button>
+        <button class="btn btn-blue"    onclick="stepCode()">Step</button>
+        <button class="btn btn-ghost"   onclick="resetCode()">Reset</button>
+        <button class="btn btn-ghost"   onclick="loadExample()">Example</button>
       </div>
-      <div class="console-label">▸ Console Output</div>
+      <div class="console-label">Console Output</div>
       <textarea id="exp-console" readonly placeholder="// Console output..."></textarea>
     </div>
 
@@ -91,7 +91,7 @@ System.out.println("Done!");</textarea>
   <!-- Status bar -->
   <div class="exp-status">
     <span class="status-dot"></span>
-    <span id="status-text">Ready — enter a value or write Java code</span>
+    <span id="status-text">Ready</span>
   </div>
 
 </div>
@@ -106,12 +106,13 @@ System.out.println("Done!");</textarea>
     from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
   const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_AUTH_DOMAIN",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_STORAGE_BUCKET",
-    messagingSenderId: "YOUR_SENDER_ID",
-    appId: "YOUR_APP_ID"
+    apiKey: "AIzaSyBf4m6LnrR2XI6j6ex1D9nHkDSNT57ErG4",
+    authDomain: "send-node.firebaseapp.com",
+    projectId: "send-node",
+    storageBucket: "send-node.firebasestorage.app",
+    messagingSenderId: "239978336493",
+    appId: "1:239978336493:web:49580094311c7562d5fce4",
+    measurementId: "G-TS3CCSHWJT"
   };
   const app  = initializeApp(firebaseConfig);
   const auth = getAuth(app);
