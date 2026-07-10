@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — BSTify</title>
+  <link rel="stylesheet" href="css/global.css" />
+  <link rel="stylesheet" href="css/dashboard.css" />
+</head>
+<body>
+<div class="dashboard-page">
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <a class="logo" href="dashboard.html">
+      <div class="logo-icon">🌳</div>
+      BST<span>ify</span>
+    </a>
+    <div class="navbar-user">
+      <span id="nav-username">Loading...</span>
+      <div class="navbar-avatar" id="nav-avatar">?</div>
+      <button class="btn btn-ghost btn-icon" onclick="handleLogout()" title="Sign Out">⬡</button>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <p class="hero-greeting">Welcome back</p>
+    <h1 class="hero-title" id="hero-name">Loading...</h1>
+    <p class="hero-sub">Keep learning, keep growing. Pick a mode to continue.</p>
+  </section>
+
+  <!-- Stats -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-value" id="stat-solved">0</div>
+      <div class="stat-label">Problems Solved</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" id="stat-total">14</div>
+      <div class="stat-label">Total Problems</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" id="stat-pct">0%</div>
+      <div class="stat-label">Completion</div>
+    </div>
+  </div>
+
+  <!-- Mode Cards -->
+  <div class="mode-section">
+    <p class="mode-section-title">Choose your mode</p>
+    <div class="mode-cards">
+
+      <a class="mode-card explore" href="explorer.html">
+        <div class="mode-icon">🌲</div>
+        <div class="mode-title">Explorer</div>
+        <div class="mode-desc">Visualize Binary Search Trees interactively. Insert, delete, search nodes. Pan and zoom around the tree with smooth animations.</div>
+        <div class="mode-tags">
+          <span class="mode-tag">Insert</span>
+          <span class="mode-tag">Delete</span>
+          <span class="mode-tag">Search</span>
+          <span class="mode-tag">Pan / Zoom</span>
+          <span class="mode-tag">Code Editor</span>
+        </div>
+        <span class="mode-arrow">→</span>
+      </a>
+
+      <a class="mode-card challenge" href="challenge.html">
+        <div class="mode-icon">🧩</div>
+        <div class="mode-title">Challenge</div>
+        <div class="mode-desc">Solve 14 BST problems in a LeetCode-style IDE. Write Java-style code, run it, and watch the tree visualizer react live.</div>
+        <div class="mode-tags">
+          <span class="mode-tag">Easy</span>
+          <span class="mode-tag">Medium</span>
+          <span class="mode-tag">Hard</span>
+          <span class="mode-tag">14 Problems</span>
+          <span class="mode-tag">IDE</span>
+        </div>
+        <span class="mode-arrow">→</span>
+      </a>
+
+    </div>
+  </div>
+
+  <!-- Problem List Preview -->
+  <div class="recent-section">
+    <div class="section-header">
+      <h2 class="section-title">All Problems</h2>
+      <a href="challenge.html" class="btn btn-ghost">View All →</a>
+    </div>
+    <div class="problem-list" id="problem-list">
+      <!-- Populated by JS -->
+    </div>
+  </div>
+
+</div>
+
+<!-- Toast container -->
+<div id="toast-container"></div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getAuth, onAuthStateChanged, signOut }
+    from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+  import { getFirestore, doc, getDoc }
+    from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_AUTH_DOMAIN",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_STORAGE_BUCKET",
+    messagingSenderId: "YOUR_SENDER_ID",
+    appId: "YOUR_APP_ID"
+  };
+
+  const app  = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db   = getFirestore(app);
+
+  const PROBLEMS = [
+    { id:1,  title:'Insert a Node',               difficulty:'easy'   },
+    { id:2,  title:'Search in a BST',             difficulty:'easy'   },
+    { id:3,  title:'Delete a Node',               difficulty:'medium' },
+    { id:4,  title:'Find Minimum / Maximum',       difficulty:'easy'   },
+    { id:5,  title:'Inorder Traversal',            difficulty:'easy'   },
+    { id:6,  title:'Level Order Traversal',        difficulty:'medium' },
+    { id:7,  title:'Height of BST',               difficulty:'easy'   },
+    { id:8,  title:'Count Nodes',                 difficulty:'easy'   },
+    { id:9,  title:'Check if Valid BST',           difficulty:'medium' },
+    { id:10, title:'Lowest Common Ancestor',       difficulty:'medium' },
+    { id:11, title:'Kth Smallest Element',         difficulty:'medium' },
+    { id:12, title:'Convert Sorted Array to BST',  difficulty:'hard'   },
+    { id:13, title:'Balanced BST Check',           difficulty:'hard'   },
+    { id:14, title:'Find Successor / Predecessor', difficulty:'hard'   },
+  ];
+
+  onAuthStateChanged(auth, async user => {
+    if (!user) { window.location.href = 'index.html'; return; }
+
+    const displayName = user.displayName || user.email.split('@')[0];
+    document.getElementById('hero-name').textContent = `Hello, ${displayName} 👋`;
+    document.getElementById('nav-username').textContent = displayName;
+    document.getElementById('nav-avatar').textContent = displayName[0].toUpperCase();
+
+    // Load user data
+    let solvedProblems = [];
+    try {
+      const snap = await getDoc(doc(db, 'users', user.uid));
+      if (snap.exists()) solvedProblems = snap.data().solvedProblems || [];
+    } catch(e) {}
+
+    const solved = solvedProblems.length;
+    document.getElementById('stat-solved').textContent = solved;
+    document.getElementById('stat-pct').textContent = Math.round((solved/14)*100) + '%';
+
+    // Render problem list
+    const list = document.getElementById('problem-list');
+    PROBLEMS.forEach(p => {
+      const isSolved = solvedProblems.includes(p.id);
+      list.innerHTML += `
+        <a class="problem-row" href="challenge.html?p=${p.id}">
+          <span class="problem-num">${p.id}</span>
+          <span class="problem-name">${p.title}</span>
+          <span class="badge badge-${p.difficulty}">${p.difficulty}</span>
+          <span class="problem-status">${isSolved ? '✅' : '○'}</span>
+        </a>`;
+    });
+  });
+
+  window.handleLogout = async function() {
+    await signOut(auth);
+    window.location.href = 'index.html';
+  };
+</script>
+</body>
+</html>

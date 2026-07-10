@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Explorer — BSTify</title>
+  <link rel="stylesheet" href="css/global.css" />
+  <link rel="stylesheet" href="css/explorer.css" />
+</head>
+<body>
+<div class="explorer-page">
+
+  <!-- Navbar -->
+  <nav class="exp-navbar">
+    <a class="logo" href="dashboard.html">
+      <div class="logo-icon">🌳</div>
+      BST<span>ify</span>
+    </a>
+    <span class="exp-title">BST Explorer</span>
+    <a class="btn btn-ghost" href="challenge.html" style="font-size:12px;padding:6px 14px;">→ Challenge Mode</a>
+    <button class="btn btn-ghost" style="font-size:12px;padding:6px 14px;" onclick="handleLogout()">Sign Out</button>
+  </nav>
+
+  <!-- Toolbar -->
+  <div class="exp-toolbar">
+    <input class="exp-input" id="value-input" type="number" placeholder="Value" />
+
+    <button class="btn btn-success btn-icon" id="btn-insert" onclick="handleInsert()">➕ Insert</button>
+    <button class="btn btn-primary btn-icon" style="background:#c0392b" onclick="handleDelete()">✖ Delete</button>
+    <button class="btn btn-blue btn-icon" onclick="handleSearch()">🔍 Search</button>
+
+    <div class="toolbar-sep"></div>
+
+    <button class="btn btn-ghost btn-icon" onclick="handleRandom()" title="Random tree">🎲 Random</button>
+    <button class="btn btn-ghost btn-icon" onclick="handleClear()" title="Clear tree">🗑 Clear</button>
+
+    <div class="toolbar-sep"></div>
+
+    <button class="btn btn-ghost btn-icon" onclick="viz.zoomIn()"  title="Zoom in">🔍+</button>
+    <button class="btn btn-ghost btn-icon" onclick="viz.zoomOut()" title="Zoom out">🔍-</button>
+    <button class="btn btn-ghost btn-icon" onclick="viz.resetView()" title="Reset view">⌂</button>
+
+    <div class="toolbar-sep"></div>
+
+    <button class="btn btn-ghost btn-icon" id="toggle-code-btn" onclick="toggleCode()">◀ Code</button>
+  </div>
+
+  <!-- Main -->
+  <div class="exp-main">
+
+    <!-- Canvas -->
+    <div class="exp-canvas-wrap">
+      <canvas id="exp-canvas"></canvas>
+      <div class="canvas-hint">🖱 Drag to pan · Scroll to zoom · Use toolbar or Code panel</div>
+    </div>
+
+    <!-- Code Panel -->
+    <div class="exp-code-panel" id="code-panel">
+      <div class="code-panel-header">
+        <div class="code-panel-title">📝 Java Code Editor</div>
+        <div class="code-panel-hint">Write Java-style code to build and manipulate the BST</div>
+      </div>
+      <div class="code-editor-wrap">
+        <textarea id="exp-code" spellcheck="false">// BST Explorer — Java Code
+// Write real Java syntax and click Run All
+
+BinarySearchTree tree = new BinarySearchTree();
+
+int[] nums = {50, 30, 70, 20, 40, 60, 80};
+for (int x : nums) { tree.insert(x); }
+
+tree.search(40);
+tree.search(99);
+
+tree.delete(30);
+
+System.out.println("Done!");</textarea>
+      </div>
+      <div class="code-btn-row">
+        <button class="btn btn-success" onclick="runCode()">▶ Run All</button>
+        <button class="btn btn-blue"    onclick="stepCode()">⏭ Step</button>
+        <button class="btn btn-ghost"   onclick="resetCode()">↺ Reset</button>
+        <button class="btn btn-ghost"   onclick="loadExample()">📋 Example</button>
+      </div>
+      <div class="console-label">▸ Console Output</div>
+      <textarea id="exp-console" readonly placeholder="// Console output..."></textarea>
+    </div>
+
+  </div>
+
+  <!-- Status bar -->
+  <div class="exp-status">
+    <span class="status-dot"></span>
+    <span id="status-text">Ready — enter a value or write Java code</span>
+  </div>
+
+</div>
+
+<script src="js/bst.js"></script>
+<script src="js/visualizer.js"></script>
+<script src="js/explorer.js"></script>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getAuth, onAuthStateChanged, signOut }
+    from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_AUTH_DOMAIN",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_STORAGE_BUCKET",
+    messagingSenderId: "YOUR_SENDER_ID",
+    appId: "YOUR_APP_ID"
+  };
+  const app  = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  onAuthStateChanged(auth, user => {
+    if (!user) window.location.href = 'index.html';
+  });
+
+  window.handleLogout = async () => { await signOut(auth); window.location.href = 'index.html'; };
+</script>
+</body>
+</html>

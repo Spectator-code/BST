@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BSTify — Learn Binary Search Trees</title>
+  <meta name="description" content="Master Binary Search Trees with interactive visualization and coding challenges." />
+  <link rel="stylesheet" href="css/global.css" />
+  <link rel="stylesheet" href="css/auth.css" />
+</head>
+<body>
+<div class="auth-page">
+  <div class="auth-container">
+    <div class="auth-card">
+
+      <!-- Logo -->
+      <div class="auth-logo">
+        <a class="logo" href="#">
+          <div class="logo-icon">🌳</div>
+          BST<span>ify</span>
+        </a>
+      </div>
+
+      <!-- Tabs -->
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="tab-login" onclick="switchTab('login')">Sign In</button>
+        <button class="auth-tab" id="tab-register" onclick="switchTab('register')">Create Account</button>
+      </div>
+
+      <!-- Error banner -->
+      <div class="auth-error" id="auth-error"></div>
+
+      <!-- Login Form -->
+      <form class="auth-form" id="login-form" onsubmit="handleLogin(event)">
+        <div class="input-group">
+          <label for="login-email">Email</label>
+          <input class="input" id="login-email" type="email" placeholder="you@example.com" required autocomplete="email" />
+        </div>
+        <div class="input-group">
+          <label for="login-password">Password</label>
+          <input class="input" id="login-password" type="password" placeholder="••••••••" required autocomplete="current-password" />
+        </div>
+        <button type="submit" class="btn btn-primary auth-submit" id="login-btn">Sign In</button>
+      </form>
+
+      <!-- Register Form -->
+      <form class="auth-form" id="register-form" style="display:none" onsubmit="handleRegister(event)">
+        <div class="input-group">
+          <label for="reg-username">Username</label>
+          <input class="input" id="reg-username" type="text" placeholder="coderName123" required />
+        </div>
+        <div class="input-group">
+          <label for="reg-email">Email</label>
+          <input class="input" id="reg-email" type="email" placeholder="you@example.com" required autocomplete="email" />
+        </div>
+        <div class="input-group">
+          <label for="reg-password">Password</label>
+          <input class="input" id="reg-password" type="password" placeholder="Min 6 characters" required minlength="6" autocomplete="new-password" />
+        </div>
+        <button type="submit" class="btn btn-primary auth-submit" id="register-btn">Create Account</button>
+      </form>
+
+      <!-- Features -->
+      <div class="auth-features">
+        <div class="auth-feature">
+          <div class="auth-feature-icon">🌲</div>
+          <span>Interactive BST Visualizer with pan & zoom</span>
+        </div>
+        <div class="auth-feature">
+          <div class="auth-feature-icon">🧩</div>
+          <span>14 BST coding challenges from Easy to Hard</span>
+        </div>
+        <div class="auth-feature">
+          <div class="auth-feature-icon">📊</div>
+          <span>Track your progress and solved problems</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Firebase SDKs -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, onAuthStateChanged }
+    from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+  import { getFirestore, doc, setDoc, getDoc, serverTimestamp }
+    from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+  // ── Firebase Config ── Replace with your project's config ──
+  const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_AUTH_DOMAIN",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_STORAGE_BUCKET",
+    messagingSenderId: "YOUR_SENDER_ID",
+    appId: "YOUR_APP_ID"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db   = getFirestore(app);
+
+  // Redirect if already logged in
+  onAuthStateChanged(auth, user => {
+    if (user) window.location.href = 'dashboard.html';
+  });
+
+  function showError(msg) {
+    const el = document.getElementById('auth-error');
+    el.textContent = msg;
+    el.classList.add('show');
+  }
+  function hideError() { document.getElementById('auth-error').classList.remove('show'); }
+
+  function setLoading(btnId, loading) {
+    const btn = document.getElementById(btnId);
+    if (loading) btn.classList.add('btn-loading');
+    else btn.classList.remove('btn-loading');
+    btn.disabled = loading;
+  }
+
+  window.handleLogin = async function(e) {
+    e.preventDefault();
+    hideError();
+    const email    = document.getElementById('login-email').value.trim();
+    const password = document.getElementById('login-password').value;
+    setLoading('login-btn', true);
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      window.location.href = 'dashboard.html';
+    } catch (err) {
+      showError(firebaseErrorMessage(err.code));
+      setLoading('login-btn', false);
+    }
+  };
+
+  window.handleRegister = async function(e) {
+    e.preventDefault();
+    hideError();
+    const username = document.getElementById('reg-username').value.trim();
+    const email    = document.getElementById('reg-email').value.trim();
+    const password = document.getElementById('reg-password').value;
+    setLoading('register-btn', true);
+    try {
+      const cred = await createUserWithEmailAndPassword(auth, email, password);
+      await updateProfile(cred.user, { displayName: username });
+      // Create user doc in Firestore
+      await setDoc(doc(db, 'users', cred.user.uid), {
+        username,
+        email,
+        solvedProblems: [],
+        totalInserts: 0,
+        createdAt: serverTimestamp()
+      });
+      window.location.href = 'dashboard.html';
+    } catch (err) {
+      showError(firebaseErrorMessage(err.code));
+      setLoading('register-btn', false);
+    }
+  };
+
+  function firebaseErrorMessage(code) {
+    const map = {
+      'auth/email-already-in-use':  'That email is already registered.',
+      'auth/invalid-email':         'Invalid email address.',
+      'auth/weak-password':         'Password must be at least 6 characters.',
+      'auth/user-not-found':        'No account found with that email.',
+      'auth/wrong-password':        'Incorrect password.',
+      'auth/too-many-requests':     'Too many attempts. Please try again later.',
+      'auth/invalid-credential':    'Email or password is incorrect.',
+    };
+    return map[code] || 'Something went wrong. Please try again.';
+  }
+</script>
+
+<script>
+  function switchTab(tab) {
+    document.getElementById('login-form').style.display    = tab === 'login'    ? 'flex' : 'none';
+    document.getElementById('register-form').style.display = tab === 'register' ? 'flex' : 'none';
+    document.getElementById('tab-login').classList.toggle('active',    tab === 'login');
+    document.getElementById('tab-register').classList.toggle('active', tab === 'register');
+    document.getElementById('auth-error').classList.remove('show');
+  }
+</script>
+</body>
+</html>
