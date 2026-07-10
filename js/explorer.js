@@ -1,4 +1,4 @@
-/**
+﻿/**
  * explorer.js — Explorer page interactions
  * Requires bst.js and visualizer.js to be loaded first
  */
@@ -124,7 +124,7 @@ window.runCode = function() {
 
 function executeSequence(lines, i) {
   if (i >= lines.length) {
-    log('\n─────────────────────────────\n✅ BUILD SUCCESSFUL');
+    log('\n─────────────────────────────\nPass BUILD SUCCESSFUL');
     setStatus('Execution complete');
     return;
   }
@@ -156,7 +156,7 @@ window.stepCode = function() {
     stepIndex++;
   }
   if (stepIndex >= stepLines.length) {
-    log('\n✅ All lines executed.');
+    log('\nPass All lines executed.');
     stepIndex = -1;
     return;
   }
@@ -166,7 +166,7 @@ window.stepCode = function() {
   if (result) log(`       └─➤ ${result}`);
   stepIndex++;
   if (stepIndex >= stepLines.length) {
-    log('\n✅ All lines executed.');
+    log('\nPass All lines executed.');
     stepIndex = -1;
   }
 };
@@ -227,21 +227,21 @@ function execLine(line) {
   if (m) {
     const arrName = m[1], cmd = m[2].toLowerCase();
     const vals = declaredArrays[arrName];
-    if (!vals) return `❌ Array '${arrName}' not found`;
+    if (!vals) return `Fail Array '${arrName}' not found`;
     return vals.map(v => execCmd(cmd, String(v))).join('; ');
   }
 
   if (/^(import|package|public|private|class|@)/.test(line)) return '(declaration)';
   if (/^(int|String|var)\s/.test(line)) return '(variable declared)';
 
-  return `⚠ Unrecognized: ${line}`;
+  return `! Unrecognized: ${line}`;
 }
 
 function execCmd(cmd, arg) {
   switch(cmd) {
     case 'insert': {
       const v = parseInt(arg);
-      if (isNaN(v)) return '❌ insert requires a number';
+      if (isNaN(v)) return 'Fail insert requires a number';
       const n = bst.insert(v);
       viz.relayout();
       if (n) setTimeout(() => viz.highlightNode(v, '#27ae60', 1000), 400);
@@ -250,9 +250,9 @@ function execCmd(cmd, arg) {
     }
     case 'delete': {
       const v = parseInt(arg);
-      if (isNaN(v)) return '❌ delete requires a number';
+      if (isNaN(v)) return 'Fail delete requires a number';
       const exists = !!bst.find(v);
-      if (!exists) return `❌ Node ${v} not found`;
+      if (!exists) return `Fail Node ${v} not found`;
       viz.highlightNode(v, '#c0392b', 400);
       setTimeout(() => { bst.delete(v); viz.relayout(); }, 350);
       setStatus(`Deleted: ${v}`);
@@ -260,12 +260,12 @@ function execCmd(cmd, arg) {
     }
     case 'search': {
       const v = parseInt(arg);
-      if (isNaN(v)) return '❌ search requires a number';
+      if (isNaN(v)) return 'Fail search requires a number';
       const path  = bst.searchPath(v);
       const found = path.length > 0 && path[path.length-1].value === v;
       viz.animateSearch(path, found, SEARCH_DELAY_MS);
       setStatus(found ? `Found: ${v}` : `${v} not found`);
-      return found ? `✔ Found node ${v}` : `✘ Node ${v} not found`;
+      return found ? `Pass Found node ${v}` : `Fail Node ${v} not found`;
     }
     case 'clear': {
       bst.clear(); viz.relayout();
@@ -273,6 +273,6 @@ function execCmd(cmd, arg) {
       return 'Tree cleared';
     }
     default:
-      return `❌ Unknown method: ${cmd}`;
+      return `Fail Unknown method: ${cmd}`;
   }
 }

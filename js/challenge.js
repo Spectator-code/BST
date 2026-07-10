@@ -1,4 +1,4 @@
-/**
+﻿/**
  * challenge.js — Challenge IDE logic
  * Requires bst.js, visualizer.js, problems.js
  */
@@ -31,7 +31,7 @@ window.initChallengePage = function(solvedProblems = []) {
       <span class="prob-item-num">${p.id}</span>
       <span class="prob-item-dot dot-${p.difficulty}"></span>
       <span class="prob-item-name">${p.title}</span>
-      <span class="prob-item-check" id="prob-check-${p.id}">${solved ? '✅' : ''}</span>`;
+      <span class="prob-item-check" id="prob-check-${p.id}">${solved ? 'Pass' : ''}</span>`;
     sidebar.appendChild(div);
   });
 
@@ -108,7 +108,7 @@ window.runCode = function(isSubmit = false) {
 
   consoleEl.value = '';
   log('╔══════════════════════════════╗');
-  log(isSubmit ? '║     ✔  Submitting...        ║' : '║     ▶  Running Code...      ║');
+  log(isSubmit ? '║     Pass  Submitting...        ║' : '║     ▶  Running Code...      ║');
   log('╚══════════════════════════════╝\n');
 
   const lines = code.split('\n');
@@ -168,7 +168,7 @@ function runTests() {
 
     const ok = String(actual) === String(expected);
     if (ok) passed++;
-    log(`  Test ${i+1}: ${ok ? '✅ PASS' : '❌ FAIL'}  expected=${expected}  got=${actual}`);
+    log(`  Test ${i+1}: ${ok ? 'Pass PASS' : 'Fail FAIL'}  expected=${expected}  got=${actual}`);
   });
 
   log(`\n${passed}/${total} tests passed.`);
@@ -176,12 +176,12 @@ function runTests() {
   const banner = document.getElementById('result-banner');
   if (passed === total) {
     banner.className  = 'result-banner pass show';
-    banner.innerHTML  = `✅ All ${total} tests passed! Problem solved!`;
+    banner.innerHTML  = `Pass All ${total} tests passed! Problem solved!`;
     banner.style.display = 'flex';
     if (typeof window.markSolved === 'function') window.markSolved(currentProblem.id);
   } else {
     banner.className  = 'result-banner fail show';
-    banner.innerHTML  = `❌ ${passed}/${total} tests passed. Check the console and try again.`;
+    banner.innerHTML  = `Fail ${passed}/${total} tests passed. Check the console and try again.`;
     banner.style.display = 'flex';
   }
 }
@@ -226,43 +226,43 @@ function execLine(line) {
   m = R_FOREACH.exec(line);
   if (m) {
     const vals = declaredArrays[m[1]];
-    if (!vals) return `❌ Array '${m[1]}' not found`;
+    if (!vals) return `Fail Array '${m[1]}' not found`;
     return vals.map(v => execCmd(m[2].toLowerCase(), String(v))).join('; ');
   }
 
   if (/^(import|package|public|private|class|@)/.test(line)) return '(declaration)';
   if (/^(int|String|var)\s/.test(line)) return '(variable declared)';
-  return `⚠ Unrecognized: ${line}`;
+  return `! Unrecognized: ${line}`;
 }
 
 function execCmd(cmd, arg) {
   switch(cmd) {
     case 'insert': {
-      const v = parseInt(arg); if (isNaN(v)) return '❌ insert requires a number';
+      const v = parseInt(arg); if (isNaN(v)) return 'Fail insert requires a number';
       const n = chalBst.insert(v); chalViz.relayout();
       if (n) setTimeout(() => chalViz.highlightNode(v, '#27ae60', 1000), 400);
       return n ? `Inserted node ${v}` : `Duplicate ${v}`;
     }
     case 'delete': {
-      const v = parseInt(arg); if (isNaN(v)) return '❌ delete requires a number';
+      const v = parseInt(arg); if (isNaN(v)) return 'Fail delete requires a number';
       const ok = chalBst.find(v);
-      if (!ok) return `❌ Node ${v} not found`;
+      if (!ok) return `Fail Node ${v} not found`;
       chalViz.highlightNode(v, '#c0392b', 400);
       setTimeout(() => { chalBst.delete(v); chalViz.relayout(); }, 350);
       return `Deleted node ${v}`;
     }
     case 'search': {
-      const v = parseInt(arg); if (isNaN(v)) return '❌ search requires a number';
+      const v = parseInt(arg); if (isNaN(v)) return 'Fail search requires a number';
       const path  = chalBst.searchPath(v);
       const found = path.length > 0 && path[path.length-1].value === v;
       chalViz.animateSearch(path, found, SEARCH_DELAY_MS);
-      return found ? `✔ Found node ${v}` : `✘ Node ${v} not found`;
+      return found ? `Pass Found node ${v}` : `Fail Node ${v} not found`;
     }
     case 'clear': {
       chalBst.clear(); chalViz.relayout();
       return 'Tree cleared';
     }
-    default: return `❌ Unknown: ${cmd}`;
+    default: return `Fail Unknown: ${cmd}`;
   }
 }
 

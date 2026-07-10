@@ -1,4 +1,4 @@
-/**
+﻿/**
  * problems.js — All 14 BST challenge problems with descriptions and test cases
  */
 
@@ -557,14 +557,14 @@ System.out.println("Balanced BST created!");
 <p>A BST is height-balanced if for every node, the difference between left and right subtree heights is <strong>at most 1</strong>.</p>
 
 <h4>Balanced example:</h4>
-<pre>    50          Heights: L=2, R=2 ✅
+<pre>    50          Heights: L=2, R=2 Pass
    /  \\
   30   70
  /  \\
 20  40</pre>
 
 <h4>Unbalanced example:</h4>
-<pre>50             Heights: L=3, R=0 ❌
+<pre>50             Heights: L=3, R=0 Fail
 /
 30
 /

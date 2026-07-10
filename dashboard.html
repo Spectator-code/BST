@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -13,7 +13,7 @@
   <!-- Navbar -->
   <nav class="navbar">
     <a class="logo" href="dashboard.html">
-      <div class="logo-icon">🌳</div>
+      <div class="logo-icon">SN</div>
       Send <span>Node</span>
     </a>
     <div class="navbar-user">
@@ -25,9 +25,9 @@
 
   <!-- Hero -->
   <section class="hero">
-    <p class="hero-greeting">Welcome back</p>
+    <p class="hero-greeting">Dashboard</p>
     <h1 class="hero-title" id="hero-name">Loading...</h1>
-    <p class="hero-sub">Keep learning, keep growing. Pick a mode to continue.</p>
+    <p class="hero-sub">Pick a mode to continue.</p>
   </section>
 
   <!-- Stats -->
@@ -52,7 +52,7 @@
     <div class="mode-cards">
 
       <a class="mode-card explore" href="explorer.html">
-        <div class="mode-icon">🌲</div>
+        <div class="mode-icon">01</div>
         <div class="mode-title">Explorer</div>
         <div class="mode-desc">Visualize Binary Search Trees interactively. Insert, delete, search nodes. Pan and zoom around the tree with smooth animations.</div>
         <div class="mode-tags">
@@ -66,7 +66,7 @@
       </a>
 
       <a class="mode-card challenge" href="challenge.html">
-        <div class="mode-icon">🧩</div>
+        <div class="mode-icon">02</div>
         <div class="mode-title">Challenge</div>
         <div class="mode-desc">Solve 14 BST problems in a LeetCode-style IDE. Write Java-style code, run it, and watch the tree visualizer react live.</div>
         <div class="mode-tags">
@@ -140,7 +140,7 @@
     if (!user) { window.location.href = 'index.html'; return; }
 
     const displayName = user.displayName || user.email.split('@')[0];
-    document.getElementById('hero-name').textContent = `Hello, ${displayName} 👋`;
+    document.getElementById('hero-name').textContent = `Hello, ${displayName} `;
     document.getElementById('nav-username').textContent = displayName;
     document.getElementById('nav-avatar').textContent = displayName[0].toUpperCase();
 
@@ -164,7 +164,7 @@
           <span class="problem-num">${p.id}</span>
           <span class="problem-name">${p.title}</span>
           <span class="badge badge-${p.difficulty}">${p.difficulty}</span>
-          <span class="problem-status">${isSolved ? '✅' : '○'}</span>
+          <span class="problem-status">${isSolved ? 'Pass' : '○'}</span>
         </a>`;
     });
   });
