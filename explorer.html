@@ -101,21 +101,9 @@ System.out.println("Done!");</textarea>
 <script src="js/explorer.js"></script>
 
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-  import { getAuth, onAuthStateChanged, signOut }
+  import { auth } from "./js/firebase-config.js";
+  import { onAuthStateChanged, signOut }
     from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyBf4m6LnrR2XI6j6ex1D9nHkDSNT57ErG4",
-    authDomain: "send-node.firebaseapp.com",
-    projectId: "send-node",
-    storageBucket: "send-node.firebasestorage.app",
-    messagingSenderId: "239978336493",
-    appId: "1:239978336493:web:49580094311c7562d5fce4",
-    measurementId: "G-TS3CCSHWJT"
-  };
-  const app  = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
 
   onAuthStateChanged(auth, user => {
     if (!user) window.location.href = 'index.html';

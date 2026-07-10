@@ -96,25 +96,11 @@
 <script src="js/challenge.js"></script>
 
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-  import { getAuth, onAuthStateChanged, signOut }
+  import { auth, db } from "./js/firebase-config.js";
+  import { onAuthStateChanged, signOut }
     from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-  import { getFirestore, doc, getDoc, updateDoc, arrayUnion }
+  import { doc, getDoc, updateDoc, arrayUnion }
     from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyBf4m6LnrR2XI6j6ex1D9nHkDSNT57ErG4",
-    authDomain: "send-node.firebaseapp.com",
-    projectId: "send-node",
-    storageBucket: "send-node.firebasestorage.app",
-    messagingSenderId: "239978336493",
-    appId: "1:239978336493:web:49580094311c7562d5fce4",
-    measurementId: "G-TS3CCSHWJT"
-  };
-
-  const app  = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db   = getFirestore(app);
 
   let currentUser = null;
   let solvedProblems = [];
