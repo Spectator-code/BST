@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -132,7 +132,7 @@
       await signInWithEmailAndPassword(auth, email, password);
       window.location.href = 'dashboard.html';
     } catch (err) {
-      showError(firebaseErrorMessage(err.code));
+      showError(firebaseErrorMessage(err));
       setLoading('login-btn', false);
     }
   };
@@ -157,12 +157,15 @@
       });
       window.location.href = 'dashboard.html';
     } catch (err) {
-      showError(firebaseErrorMessage(err.code));
+      console.error(err);
+      showError(firebaseErrorMessage(err));
       setLoading('register-btn', false);
     }
   };
 
-  function firebaseErrorMessage(code) {
+  function firebaseErrorMessage(err) {
+    const code = err.code || 'unknown';
+    const msg = err.message || '';
     const map = {
       'auth/email-already-in-use':  'That email is already registered.',
       'auth/invalid-email':         'Invalid email address.',
@@ -171,8 +174,9 @@
       'auth/wrong-password':        'Incorrect password.',
       'auth/too-many-requests':     'Too many attempts. Please try again later.',
       'auth/invalid-credential':    'Email or password is incorrect.',
+      'auth/operation-not-allowed': 'Email/Password login is not enabled in Firebase.',
     };
-    return map[code] || 'Something went wrong. Please try again.';
+    return map[code] || `Error: ${code} - ${msg}`;
   }
 </script>
 
